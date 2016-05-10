@@ -1,0 +1,6 @@
+> check-dependency
+> compile
+> run
+> check-log
+> stage
+> check-dist
