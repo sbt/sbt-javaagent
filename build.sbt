@@ -46,7 +46,7 @@ test in Test := {
 
 // publish settings
 publishMavenStyle := false
-bintrayOrganization := Some("lightbend")
+bintrayOrganization := Some("sbt")
 bintrayRepository := "sbt-plugin-releases"
 bintrayPackage := "sbt-javaagent"
 bintrayReleaseOnPublish := false
