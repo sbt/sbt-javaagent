@@ -35,7 +35,7 @@ The following scopes are supported:
 
    * **dist** — bundle the agent in production distributions and add a `-javaagent` option to start scripts
    * **compile** — add the agent as a `provided` dependency so that it's available on the compile classpath
-   * **run** — automatically fork the run and add a `-javaagent` option
+   * **runtime** — automatically fork the run and add a `-javaagent` option
    * **test** — automatically fork tests and add a `-javaagent` option
 
 The plugin can derive these scopes from module configurations.
