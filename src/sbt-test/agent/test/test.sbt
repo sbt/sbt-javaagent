@@ -9,6 +9,11 @@ TaskKey[Unit]("check") := {
     "javaOptions in Test do not contain 'maxwell' agent"
   )
 
+  assert(
+    !((fullClasspath in Test).value exists (f => f.data.name.contains("maxwell"))),
+    "maxwell test agent is available on the test run class path"
+  )
+
   val testLog = IO.read(BuiltinCommands.lastLogFile(state.value).get)
 
   assert(

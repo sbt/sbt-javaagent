@@ -64,7 +64,8 @@ object JavaAgent extends AutoPlugin {
     fork in run := enableFork(fork in run, _.scope.run).value,
     fork in Test := enableFork(fork in Test, _.scope.test).value,
     javaOptions in run ++= agentOptions(_.agent.scope.run).value,
-    javaOptions in Test ++= agentOptions(_.agent.scope.test).value
+    javaOptions in Test ++= agentOptions(_.agent.scope.test).value,
+    fullClasspath in Test := filterAgents((fullClasspath in Test).value, resolvedJavaAgents.value)
   )
 
   private def resolveAgents = Def.task[Seq[ResolvedAgent]] {
@@ -93,4 +94,8 @@ object JavaAgent extends AutoPlugin {
     }
   }
 
+  def filterAgents(classpath: Classpath, resolvedAgents: Seq[ResolvedAgent]): Classpath = {
+    val agents = resolvedAgents.map(resolved => resolved.artifact.absolutePath)
+    classpath.filter(aFile => !agents.contains(aFile.data.getAbsolutePath))
+  }
 }
