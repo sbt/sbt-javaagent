@@ -60,4 +60,12 @@ Note that in this case, the agent dependency is actually added under the `provid
 
 If the *compile* scope is not enabled, then the agent dependency is put under a special `javaagent` configuration so that it doesn't appear as a regular library dependency or on build classpaths.
 
+## Agent arguments
+
+A Java agent can have an extra argument string added to it that is provided to the `premain` method in the agent. To add an argument string simply provide it to the `JavaAgent` constructor.
+
+```scala
+javaAgents += JavaAgent("com.example" % "agent" % "1.2.3" % "compile;test", arguments = "java_agent_argument_string")
+```
+
 [sbt-native-packager]: https://github.com/sbt/sbt-native-packager

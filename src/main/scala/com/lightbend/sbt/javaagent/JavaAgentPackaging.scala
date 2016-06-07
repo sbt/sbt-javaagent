@@ -21,19 +21,21 @@ object JavaAgentPackaging extends AutoPlugin {
   override def requires = JavaAgent && PluginRef("com.typesafe.sbt.packager.archetypes.JavaAppPackaging")
 
   override def projectSettings = Seq(
-    mappings in Universal ++= agentMappings.value,
+    mappings in Universal ++= agentMappings.value.map(m => m._1 -> m._2),
     bashScriptExtraDefines ++= agentScriptOptions.value
   )
 
-  private def agentMappings = Def.task[Seq[(File, String)]] {
+  private def agentMappings = Def.task[Seq[(File, String, String)]] {
     resolvedJavaAgents.value filter (_.agent.scope.dist) map { resolved =>
-      resolved.artifact -> (Project.normalizeModuleID(resolved.agent.name) + File.separator + resolved.artifact.name)
+      (resolved.artifact,
+        Project.normalizeModuleID(resolved.agent.name) + File.separator + resolved.artifact.name,
+        resolved.agent.arguments)
     }
   }
 
   private def agentScriptOptions = Def.task[Seq[String]] {
     agentMappings.value map {
-      case (_, path) => s"""addJava "-javaagent:$${app_home}/../${normalizePath(path)}" """
+      case (_, path, arguments) => s"""addJava "-javaagent:$${app_home}/../${normalizePath(path)}$arguments" """
     }
   }
 

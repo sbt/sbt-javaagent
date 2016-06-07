@@ -27,7 +27,7 @@ object JavaAgent extends AutoPlugin {
 
   case class AgentScope(compile: Boolean = false, test: Boolean = false, run: Boolean = false, dist: Boolean = true)
 
-  case class AgentModule(name: String, module: ModuleID, scope: AgentScope)
+  case class AgentModule(name: String, module: ModuleID, scope: AgentScope, arguments: String)
 
   case class ResolvedAgent(agent: AgentModule, artifact: File)
 
@@ -40,8 +40,9 @@ object JavaAgent extends AutoPlugin {
    * Create an agent module from a module dependency.
    * Scope is also derived from the given module configuration.
    */
-  def apply(module: ModuleID, name: String = null, scope: AgentScope = AgentScope()): AgentModule = {
+  def apply(module: ModuleID, name: String = null, scope: AgentScope = AgentScope(), arguments: String = null): AgentModule = {
     val agentName = Option(name).getOrElse(module.name)
+    val agentArguments = Option(arguments).map("=" + _).getOrElse("")
     val confs = module.configurations.toSeq.flatMap(_.split(";"))
     val inCompile = scope.compile || confs.contains(Compile.name) || confs.contains(Provided.name)
     val inRun = scope.run || inCompile || confs.contains(Runtime.name)
@@ -50,7 +51,7 @@ object JavaAgent extends AutoPlugin {
     val configuration = if (inCompile) Provided else AgentConfig
     val reconfiguredModule = module.copy(configurations = Some(configuration.name))
     val configuredScope = AgentScope(compile = inCompile, test = inTest, run = inRun, dist = inDist)
-    AgentModule(agentName, reconfiguredModule, configuredScope)
+    AgentModule(agentName, reconfiguredModule, configuredScope, agentArguments)
   }
 
   override def requires = plugins.JvmPlugin
@@ -87,8 +88,8 @@ object JavaAgent extends AutoPlugin {
   }
 
   private def agentOptions(enabled: ResolvedAgent => Boolean) = Def.task[Seq[String]] {
-    resolvedJavaAgents.value filter enabled map { agent =>
-      "-javaagent:" + agent.artifact.absolutePath
+    resolvedJavaAgents.value filter enabled map { resolved =>
+      "-javaagent:" + resolved.artifact.absolutePath + resolved.agent.arguments
     }
   }
 
