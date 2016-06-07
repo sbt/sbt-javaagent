@@ -4,3 +4,4 @@
 > check-log
 > stage
 > check-dist
+> check-test-and-run-paths
