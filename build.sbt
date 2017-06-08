@@ -11,6 +11,8 @@ organization := "com.lightbend.sbt"
 
 // dependencies
 val packagerVersion = "1.0.6"
+val packager11xVersion = "1.1.5"
+val packager12xVersion = "1.2.0"
 addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % packagerVersion % "provided")
 
 // compile settings
@@ -33,7 +35,9 @@ lazy val maxwell = project
 scriptedSettings
 scriptedLaunchOpts ++= Seq(
   "-Dproject.version=" + version.value,
-  "-Dpackager.version=" + packagerVersion
+  "-Dpackager.version=" + packagerVersion,
+  "-Dpackager.11x.version=" + packager11xVersion,
+  "-Dpackager.12x.version=" + packager12xVersion
 )
 scriptedDependencies := {
   (publishLocal in maxwell).value
