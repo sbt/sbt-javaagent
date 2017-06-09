@@ -6,8 +6,6 @@ package com.lightbend.sbt.javaagent
 
 import sbt._
 import sbt.Keys._
-import com.typesafe.sbt.packager.archetypes.JavaAppPackaging.autoImport.bashScriptExtraDefines
-import com.typesafe.sbt.packager.archetypes.JavaAppPackaging.autoImport.batScriptExtraDefines
 import com.typesafe.sbt.packager.universal.UniversalPlugin.autoImport.Universal
 import java.io.File
 
@@ -22,11 +20,11 @@ object JavaAgentPackaging extends AutoPlugin {
   override def requires = JavaAgent && PluginRef("com.typesafe.sbt.packager.archetypes.JavaAppPackaging")
 
   override def projectSettings = {
-    import com.typesafe.sbt.packager.Keys
+    import com.typesafe.sbt.packager.{ Keys => PackagerKeys }
     Seq(
       mappings in Universal ++= agentMappings.value.map(m => m._1 -> m._2),
-      Keys.bashScriptExtraDefines ++= agentBashScriptOptions.value,
-      Keys.batScriptExtraDefines ++= agentBatScriptOptions.value
+      PackagerKeys.bashScriptExtraDefines ++= agentBashScriptOptions.value,
+      PackagerKeys.batScriptExtraDefines ++= agentBatScriptOptions.value
     )
   }
 
