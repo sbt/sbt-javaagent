@@ -1,5 +1,5 @@
 > run
-> check-log
-> clear-log
+> checkLog
+> clearLog
 > test
-> check-log
+> checkLog

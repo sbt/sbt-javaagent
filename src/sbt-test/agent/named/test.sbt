@@ -4,6 +4,7 @@ TaskKey[Unit]("check") := {
     "dist mappings do not include 'get-smart/maxwell.jar'"
   )
 
+  import scala.sys.process._
   val output = ((stagingDirectory in Universal).value / "bin" / packageName.value).absolutePath.!!
 
   assert(
