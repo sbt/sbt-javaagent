@@ -1,4 +1,4 @@
-TaskKey[Unit]("check-log") := {
+TaskKey[Unit]("checkLog") := {
   val log = IO.read(BuiltinCommands.lastLogFile(state.value).get)
 
   def expect(expected: String): Unit = {
@@ -9,6 +9,6 @@ TaskKey[Unit]("check-log") := {
   expect("class maxwell.Maxwell")
 }
 
-TaskKey[Unit]("clear-log") := {
+TaskKey[Unit]("clearLog") := {
   IO.write(BuiltinCommands.lastLogFile(state.value).get, "")
 }

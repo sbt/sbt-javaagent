@@ -1,7 +1,7 @@
-> check-dependency
+> checkDependency
 > compile
 > run
-> check-log
+> checkLog
 > stage
-> check-dist
-> check-test-and-run-paths
+> checkDist
+> checkTestAndRunPaths

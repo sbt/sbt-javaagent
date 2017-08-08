@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Lightbend, Inc. <http://www.lightbend.com>
+ * Copyright © 2016-2017 Lightbend, Inc. <http://www.lightbend.com>
  */
 
 package com.lightbend.sbt.javaagent
@@ -49,7 +49,7 @@ object JavaAgent extends AutoPlugin {
     val inTest = scope.test || confs.contains(Test.name)
     val inDist = scope.dist
     val configuration = if (inCompile) Provided else AgentConfig
-    val reconfiguredModule = module.copy(configurations = Some(configuration.name))
+    val reconfiguredModule = Modules.withConfigurations(module, Some(configuration.name))
     val configuredScope = AgentScope(compile = inCompile, test = inTest, run = inRun, dist = inDist)
     AgentModule(agentName, reconfiguredModule, configuredScope, agentArguments)
   }
@@ -70,17 +70,9 @@ object JavaAgent extends AutoPlugin {
 
   private def resolveAgents = Def.task[Seq[ResolvedAgent]] {
     javaAgents.value flatMap { agent =>
-      update.value.matching(exactModuleFilter(agent.module)).headOption map {
+      update.value.matching(Modules.exactFilter(agent.module)).headOption map {
         jar => ResolvedAgent(agent, jar)
       }
-    }
-  }
-
-  private def exactModuleFilter(module: ModuleID) = new ModuleFilter {
-    def apply(m: ModuleID) = {
-      m.organization == module.organization &&
-      m.name         == module.name &&
-      m.revision     == module.revision
     }
   }
 
