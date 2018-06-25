@@ -10,10 +10,7 @@ name := "sbt-javaagent"
 organization := "com.lightbend.sbt"
 
 // sbt cross build
-crossSbtVersions := Seq("0.13.16", "1.0.0-RC3")
-
-// fixed in https://github.com/sbt/sbt/pull/3397 (for sbt 0.13.17)
-sbtBinaryVersion in update := (sbtBinaryVersion in pluginCrossBuild).value
+crossSbtVersions := Seq("0.13.17", "1.1.6")
 
 // dependencies
 val packagerVersion = "1.2.2-RC2" // with sbt 1.0 cross build
