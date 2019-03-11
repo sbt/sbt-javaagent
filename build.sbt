@@ -13,10 +13,10 @@ organization := "com.lightbend.sbt"
 crossSbtVersions := Seq("0.13.18", "1.2.8")
 
 // dependencies
-val packagerVersion = "1.2.2-RC2" // with sbt 1.0 cross build
+val packagerVersion = "1.3.19"
 val packager10xVersion = "1.0.6"
 val packager11xVersion = "1.1.6"
-val packager12xVersion = "1.2.1"
+val packager12xVersion = "1.2.2"
 addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % packagerVersion % "provided")
 
 // compile settings
