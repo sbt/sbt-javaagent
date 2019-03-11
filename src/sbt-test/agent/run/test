@@ -1,2 +1,3 @@
+> set outputStrategy := Some(CustomOutput(new java.io.FileOutputStream(file("run.log"))))
 > run
 > check

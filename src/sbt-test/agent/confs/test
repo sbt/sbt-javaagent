@@ -1,5 +1,6 @@
+> set outputStrategy := Some(CustomOutput(new java.io.FileOutputStream(file("run.log"))))
 > run
-> checkLog
-> clearLog
+> checkRunLog
+> set outputStrategy := Some(CustomOutput(new java.io.FileOutputStream(file("test.log"))))
 > test
-> checkLog
+> checkTestLog

@@ -14,7 +14,7 @@ TaskKey[Unit]("check") := {
     "javaOptions in run do not contain 'maxwell' agent"
   )
 
-  val runLog = IO.read(BuiltinCommands.lastLogFile(state.value).get)
+  val runLog = IO.read(file("run.log"))
 
   assert(
     runLog contains "Agent 86",
