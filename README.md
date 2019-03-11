@@ -10,9 +10,9 @@ Add the plugin to your `project/plugins.sbt`:
 addSbtPlugin("com.lightbend.sbt" % "sbt-javaagent" % versionNumber)
 ```
 
-The version number is determined by the latest package, and can be deduced from the [version.sbt](https://github.com/sbt/sbt-javaagent/blob/master/version.sbt) file, i.e. if the version.sbt is `0.1.5-SNAPSHOT` then the latest released version is probably `0.1.4`.  You can see the full version packages in the bintray repository:
+See [sbt-javaagent releases] for a list of released versions.
 
-https://dl.bintray.com/sbt/sbt-plugin-releases/com.lightbend.sbt/sbt-javaagent/scala_2.12/sbt_1.0/
+[sbt-javaagent releases]: https://github.com/sbt/sbt-javaagent/releases
 
 ## Java agent
 
@@ -60,7 +60,7 @@ Multiple configurations can be specified. For example, the following will enable
 javaAgents += "com.example" % "agent" % "1.2.3" % "compile;test"
 ```
 
-Note that in this case, the agent dependency is actually added under the `provided` configuration, so that a project can compile against the agent and then have the agent provided at runtime using a `-javaagent` option. 
+Note that in this case, the agent dependency is actually added under the `provided` configuration, so that a project can compile against the agent and then have the agent provided at runtime using a `-javaagent` option.
 
 If the *compile* scope is not enabled, then the agent dependency is put under a special `javaagent` configuration so that it doesn't appear as a regular library dependency or on build classpaths.
 
