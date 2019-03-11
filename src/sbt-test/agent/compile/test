@@ -1,3 +1,4 @@
+> set outputStrategy := Some(CustomOutput(new java.io.FileOutputStream(file("run.log"))))
 > checkDependency
 > compile
 > run

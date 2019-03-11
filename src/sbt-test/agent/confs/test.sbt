@@ -1,5 +1,8 @@
-TaskKey[Unit]("checkLog") := {
-  val log = IO.read(BuiltinCommands.lastLogFile(state.value).get)
+TaskKey[Unit]("checkRunLog") := checkLog("run.log")
+TaskKey[Unit]("checkTestLog") := checkLog("test.log")
+
+def checkLog(logFile: String): Unit = {
+  val log = IO.read(file(logFile))
 
   def expect(expected: String): Unit = {
     assert(log contains expected, s"log should contain '$expected'")
@@ -7,8 +10,4 @@ TaskKey[Unit]("checkLog") := {
 
   expect("Agent 86")
   expect("class maxwell.Maxwell")
-}
-
-TaskKey[Unit]("clearLog") := {
-  IO.write(BuiltinCommands.lastLogFile(state.value).get, "")
 }

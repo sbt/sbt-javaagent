@@ -9,7 +9,7 @@ def expect(name: String, contents: String, expected: String): Unit =
   assert(contents contains expected, s"$name should contain '$expected'")
 
 TaskKey[Unit]("checkLog") := {
-  val log = IO.read(BuiltinCommands.lastLogFile(state.value).get)
+  val log = IO.read(file("run.log"))
   expect("run log", log, "Agent 86")
   expect("run log", log, "class maxwell.Maxwell")
 }

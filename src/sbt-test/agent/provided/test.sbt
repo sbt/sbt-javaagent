@@ -2,10 +2,10 @@ TaskKey[Unit]("check") := {
   def expect(name: String, contents: String, expected: String): Unit =
     assert(contents contains expected, s"$name should contain '$expected'")
 
-  val lastLog = IO.read(BuiltinCommands.lastLogFile(state.value).get)
+  val log = IO.read(file("run.log"))
 
-  expect("run log", lastLog, "Agent 86")
-  expect("run log", lastLog, "class maxwell.Maxwell")
+  expect("run log", log, "Agent 86")
+  expect("run log", log, "class maxwell.Maxwell")
 
   import scala.sys.process._
   val output = ((stagingDirectory in Universal).value / "bin" / packageName.value).absolutePath.!!
