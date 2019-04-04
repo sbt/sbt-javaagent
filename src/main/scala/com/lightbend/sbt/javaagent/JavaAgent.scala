@@ -62,6 +62,7 @@ object JavaAgent extends AutoPlugin {
     libraryDependencies ++= javaAgents.value.map(_.module),
     resolvedJavaAgents := resolveAgents.value,
     fork in run := enableFork(fork in run, _.scope.run).value,
+    connectInput in run := enableFork(fork in run, _.scope.run).value,
     fork in Test := enableFork(fork in Test, _.scope.test).value,
     javaOptions in run ++= agentOptions(_.agent.scope.run).value,
     javaOptions in Test ++= agentOptions(_.agent.scope.test).value,
