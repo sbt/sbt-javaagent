@@ -12,16 +12,13 @@ import sbt.Keys._
  * Supports agents as compile-time dependencies, in forked tests, in forked run,
  * and in `sbt-native-packager` dists through the `JavaAgentPackaging` plugin.
  */
-object JavaAgent extends AutoPlugin {
+object JavaAgent extends JavaAgent {
+  val autoImport = JavaAgentKeys
 
   object JavaAgentKeys {
     val javaAgents = settingKey[Seq[AgentModule]]("Java agent modules enabled for this project.")
     val resolvedJavaAgents = taskKey[Seq[ResolvedAgent]]("Java agent modules with resolved artifacts.")
   }
-
-  import JavaAgentKeys._
-
-  val autoImport = JavaAgentKeys
 
   val AgentConfig = config("javaagent").hide
 
@@ -53,8 +50,13 @@ object JavaAgent extends AutoPlugin {
     val configuredScope = AgentScope(compile = inCompile, test = inTest, run = inRun, dist = inDist)
     AgentModule(agentName, reconfiguredModule, configuredScope, agentArguments)
   }
+}
 
-  override def requires = plugins.JvmPlugin
+class JavaAgent extends AutoPlugin {
+  import JavaAgent._
+  import JavaAgent.JavaAgentKeys._
+
+  override def requires: Plugins = plugins.JvmPlugin
 
   override def projectSettings = Seq(
     javaAgents := Seq.empty,
