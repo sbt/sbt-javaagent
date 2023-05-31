@@ -67,8 +67,12 @@ lazy val `sbt-javaagent` =
         (scriptedTests / copyResources).value
       },
       // publish settings
-      publishMavenStyle := true,
-      licenses += "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html")
+      licenses += "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"),
+      scmInfo := Some(ScmInfo(url("https://github.com/sbt/sbt-javaagent"), "scm:git:git@github.com:sbt/sbt-javaagent.git")),
+      homepage := scmInfo.value.map(_.browseUrl),
+      developers := List(
+        Developer("pvlugter", "Peter Vlugter", "peter.vlugter@lightbend.com", url("https://github.com/pvlugter"))
+      )
 
 )
 
