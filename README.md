@@ -8,6 +8,8 @@ Add the plugin to your `project/plugins.sbt`:
 
 ```scala
 addSbtPlugin("com.github.sbt" % "sbt-javaagent" % versionNumber)
+// Until version 0.1.6
+addSbtPlugin("com.lightbend.sbt" % "sbt-javaagent" % "0.1.6")
 ```
 
 See [sbt-javaagent releases] for a list of released versions.
