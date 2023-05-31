@@ -7,7 +7,7 @@ This sbt plugin adds Java agents to projects in a general way. It can enable age
 Add the plugin to your `project/plugins.sbt`:
 
 ```scala
-addSbtPlugin("com.lightbend.sbt" % "sbt-javaagent" % versionNumber)
+addSbtPlugin("com.github.sbt" % "sbt-javaagent" % versionNumber)
 ```
 
 See [sbt-javaagent releases] for a list of released versions.
