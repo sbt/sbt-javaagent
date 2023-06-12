@@ -84,7 +84,7 @@ licenses += "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html
 scmInfo := Some(ScmInfo(url("https://github.com/sbt/sbt-javaagent"), "scm:git:git@github.com:sbt/sbt-javaagent.git"))
 homepage := scmInfo.value.map(_.browseUrl)
 developers := List(
-  Developer("pvlugter", "Peter Vlugter", "peter.vlugter@lightbend.com", url("https://github.com/pvlugter"))
+  Developer("contributors", "Contributors", "https://github.com/sbt/sbt-javaagent/discussions", url("https://github.com/sbt/sbt-javaagent/graphs/contributors"))
 )
 publishTo := sonatypePublishTo.value
 
