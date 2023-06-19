@@ -7,7 +7,7 @@ lazy val `sbt-javaagent` = project in file(".")
 sbtPlugin := true
 
 name := "sbt-javaagent"
-organization := "com.lightbend.sbt"
+organization := "com.github.sbt"
 
 // sbt cross build
 crossSbtVersions := Seq("0.13.18", "1.2.8")
@@ -79,12 +79,14 @@ scriptedDependencies := {
 }
 
 // publish settings
-publishMavenStyle := false
-bintrayOrganization := Some("sbt")
-bintrayRepository := "sbt-plugin-releases"
-bintrayPackage := "sbt-javaagent"
-bintrayReleaseOnPublish := false
+publishMavenStyle := true
 licenses += "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html")
+scmInfo := Some(ScmInfo(url("https://github.com/sbt/sbt-javaagent"), "scm:git:git@github.com:sbt/sbt-javaagent.git"))
+homepage := scmInfo.value.map(_.browseUrl)
+developers := List(
+  Developer("contributors", "Contributors", "https://github.com/sbt/sbt-javaagent/discussions", url("https://github.com/sbt/sbt-javaagent/graphs/contributors"))
+)
+publishTo := sonatypePublishTo.value
 
 // release settings
 import ReleaseTransformations._
@@ -96,8 +98,8 @@ releaseProcess := Seq[ReleaseStep](
   setReleaseVersion,
   commitReleaseVersion,
   tagRelease,
-  releaseStepCommandAndRemaining("^ publish"),
-  releaseStepTask(bintrayRelease),
+  releaseStepCommandAndRemaining("^ publishSigned"),
+  releaseStepCommand("sonatypeReleaseAll"),
   setNextVersion,
   commitNextVersion,
   pushChanges
