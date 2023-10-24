@@ -17,7 +17,9 @@ object JavaAgentPackaging extends AutoPlugin {
 
   override def trigger = allRequirements
 
-  override def requires = JavaAgent && PluginRef("com.typesafe.sbt.packager.archetypes.JavaAppPackaging")
+  override def requires = JavaAgent &&
+    PluginRef("com.typesafe.sbt.packager.archetypes.JavaAppPackaging") &&
+    PluginRef("com.typesafe.sbt.packager.archetypes.scripts.BashStartScriptPlugin")
 
   override def projectSettings = {
     import com.typesafe.sbt.packager.{ Keys => PackagerKeys }
