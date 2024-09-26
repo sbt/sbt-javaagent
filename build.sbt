@@ -7,9 +7,8 @@ crossSbtVersions := Seq("1.2.8")
 
 // dependencies
 val packagerVersion = "1.10.4"
-val packager10xVersion = "1.0.6"
-val packager11xVersion = "1.1.6"
-val packager12xVersion = "1.2.2"
+val packager19xVersion = "1.9.16"
+
 addSbtPlugin(
   "com.github.sbt" % "sbt-native-packager" % packagerVersion % "provided"
 )
@@ -34,7 +33,7 @@ lazy val maxwell = project
     crossPaths := false,
     packageOptions += Package
       .ManifestAttributes("Premain-Class" -> "maxwell.Maxwell"),
-    publish / skip := true
+    publish := {}
   )
 
 // plugin module
@@ -47,46 +46,12 @@ lazy val `sbt-javaagent` = (project in file("."))
     scriptedLaunchOpts ++= Seq(
       "-Dproject.version=" + version.value,
       "-Dpackager.version=" + packagerVersion,
-      "-Dpackager.10x.version=" + packager10xVersion,
-      "-Dpackager.11x.version=" + packager11xVersion,
-      "-Dpackager.12x.version=" + packager12xVersion
+      "-Dpackager.19x.version=" + packager19xVersion
     ),
     scriptedDependencies := {
       (maxwell / publishLocal).value
       publishLocal.value
-    },
-    Test / test := {
-      (Test / test).value
-      scripted.toTask("").value
-    },
-    scriptedTests / resourceDirectory := sourceDirectory.value / "sbt-test",
-    scriptedTests / resourceDirectories := Seq(
-      (scriptedTests / resourceDirectory).value
-    ),
-    scriptedTests / resourceDirectories += sourceDirectory.value / ("sbt-test-" + (pluginCrossBuild / sbtBinaryVersion).value),
-    scriptedTests / includeFilter := AllPassFilter,
-    scriptedTests / excludeFilter := HiddenFileFilter,
-    scriptedTests / resources := Defaults
-      .collectFiles(
-        scriptedTests / resourceDirectories,
-        scriptedTests / includeFilter,
-        scriptedTests / excludeFilter
-      )
-      .value,
-    scriptedTests / target := crossTarget.value / "sbt-test",
-    scriptedTests / copyResources := {
-      val testResources = (scriptedTests / resources).value
-      val testDirectories = (scriptedTests / resourceDirectories).value
-      val testTarget = (scriptedTests / target).value
-      val cacheFile = streams.value.cacheDirectory / "copy-sbt-test"
-      val mappings = (testResources --- testDirectories) pair (Path.rebase(
-        testDirectories,
-        testTarget
-      ) | Path.flat(testTarget))
-      Sync.sync(sbt.util.CacheStore(cacheFile))(mappings)
-      mappings
-    },
-    sbtTestDirectory := (scriptedTests / target).value
+    }
   )
 
 // publish settings
