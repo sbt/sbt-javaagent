@@ -72,11 +72,23 @@ class JavaAgent extends AutoPlugin {
   )
 
   private def resolveAgents = Def.task[Seq[ResolvedAgent]] {
-    javaAgents.value flatMap { agent =>
+    val missingAgentDependencies = javaAgents.value.map(_.module).filterNot(libraryDependencies.value.contains)
+    if (missingAgentDependencies.nonEmpty) {
+      sys.error(
+        s"Some agents missing from libraryDependencies. " +
+          s"It might mean you override libraryDependencies with := instead of adding new ones with ++=. " +
+          s"Missing agents: $missingAgentDependencies"
+      )
+    }
+    val resolvedAgents = javaAgents.value flatMap { agent =>
       update.value.matching(Modules.exactFilter(agent.module)).headOption map {
         jar => ResolvedAgent(agent, jar)
       }
     }
+    val unresolvedAgents = javaAgents.value.filterNot(agent => resolvedAgents.map(_.agent.module).contains(agent.module))
+    if (unresolvedAgents.nonEmpty)
+      sys.error(s"Unable to resolve agents, missing agents: $unresolvedAgents")
+    else resolvedAgents
   }
 
   private def enableFork(forkKey: SettingKey[Boolean], enabled: AgentModule => Boolean) = Def.setting[Boolean] {
