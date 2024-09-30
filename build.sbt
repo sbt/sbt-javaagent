@@ -3,7 +3,7 @@
  */
 
 // sbt cross build
-crossSbtVersions := Seq("1.2.8")
+crossSbtVersions := Seq("1.10.2")
 
 // dependencies
 val packagerVersion = "1.10.4"
@@ -37,7 +37,7 @@ lazy val maxwell = project
   )
 
 // plugin module
-lazy val `sbt-javaagent` = (project in file("."))
+lazy val `sbt-javaagent` = (project.in(file(".")))
   .enablePlugins(SbtPlugin)
   .settings(
     name := "sbt-javaagent",
