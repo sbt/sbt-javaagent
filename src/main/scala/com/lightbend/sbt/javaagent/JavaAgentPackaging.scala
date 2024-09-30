@@ -78,6 +78,6 @@ object JavaAgentPackaging extends AutoPlugin {
     }
   }
 
-  object NoPlugin extends AutoPlugin
-
 }
+
+object NoPlugin extends AutoPlugin

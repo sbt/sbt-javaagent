@@ -63,20 +63,32 @@ class JavaAgent extends AutoPlugin {
     ivyConfigurations += AgentConfig,
     libraryDependencies ++= javaAgents.value.map(_.module),
     resolvedJavaAgents := resolveAgents.value,
-    fork in run := enableFork(fork in run, _.scope.run).value,
-    connectInput in run := enableFork(fork in run, _.scope.run).value,
-    fork in Test := enableFork(fork in Test, _.scope.test).value,
-    javaOptions in run ++= agentOptions(_.agent.scope.run).value,
-    javaOptions in Test ++= agentOptions(_.agent.scope.test).value,
-    fullClasspath in Test := filterAgents((fullClasspath in Test).value, resolvedJavaAgents.value)
+    run/fork := enableFork(run/fork, _.scope.run).value,
+    run/connectInput := enableFork(run/fork, _.scope.run).value,
+    Test/fork := enableFork(Test/fork, _.scope.test).value,
+    run/javaOptions ++= agentOptions(_.agent.scope.run).value,
+    Test/javaOptions ++= agentOptions(_.agent.scope.test).value,
+    Test/fullClasspath := filterAgents((Test/fullClasspath).value, resolvedJavaAgents.value)
   )
 
   private def resolveAgents = Def.task[Seq[ResolvedAgent]] {
-    javaAgents.value flatMap { agent =>
+    val missingAgentDependencies = javaAgents.value.map(_.module).filterNot(libraryDependencies.value.contains)
+    if (missingAgentDependencies.nonEmpty) {
+      sys.error(
+        s"Some agents missing from libraryDependencies. " +
+          s"It might mean you override libraryDependencies with := instead of adding new ones with ++=. " +
+          s"Missing agents: $missingAgentDependencies"
+      )
+    }
+    val resolvedAgents = javaAgents.value flatMap { agent =>
       update.value.matching(Modules.exactFilter(agent.module)).headOption map {
         jar => ResolvedAgent(agent, jar)
       }
     }
+    val unresolvedAgents = javaAgents.value.filterNot(agent => resolvedAgents.map(_.agent.module).contains(agent.module))
+    if (unresolvedAgents.nonEmpty)
+      sys.error(s"Unable to resolve agents, missing agents: $unresolvedAgents")
+    else resolvedAgents
   }
 
   private def enableFork(forkKey: SettingKey[Boolean], enabled: AgentModule => Boolean) = Def.setting[Boolean] {
