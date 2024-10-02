@@ -24,7 +24,7 @@ object JavaAgentPackaging extends AutoPlugin {
   override def projectSettings = {
     import com.typesafe.sbt.packager.{ Keys => PackagerKeys }
     Seq(
-      mappings in Universal ++= agentMappings.value.map(m => m._1 -> m._2),
+      Universal / mappings ++= agentMappings.value.map(m => m._1 -> m._2),
       PackagerKeys.bashScriptExtraDefines ++= agentBashScriptOptions.value,
       PackagerKeys.batScriptExtraDefines ++= agentBatScriptOptions.value
     )

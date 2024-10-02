@@ -1,4 +1,4 @@
-lazy val agentConfs = project in file(".") enablePlugins JavaAgent
+lazy val agentConfs = project.in(file(".")).enablePlugins(JavaAgent)
 
 javaAgents += "sbt.javaagent.test" % "maxwell" % sys.props("project.version") % "compile;test"
 

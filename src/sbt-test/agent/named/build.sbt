@@ -1,3 +1,7 @@
-lazy val agentNamed = project in file(".") enablePlugins (JavaAgent, JavaAppPackaging)
+lazy val agentNamed =
+  project.in(file(".")).enablePlugins(JavaAgent, JavaAppPackaging)
 
-javaAgents += JavaAgent(name = "Get Smart", module = "sbt.javaagent.test" % "maxwell" % sys.props("project.version"))
+javaAgents += JavaAgent(
+  name = "Get Smart",
+  module = "sbt.javaagent.test" % "maxwell" % sys.props("project.version")
+)

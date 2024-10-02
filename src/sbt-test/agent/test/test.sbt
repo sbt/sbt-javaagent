@@ -1,16 +1,20 @@
 TaskKey[Unit]("check") := {
   assert(
-    (fork in Test).value,
-    "fork in Test is not enabled"
+    (Test / fork).value,
+    "Test / fork is not enabled"
   )
 
   assert(
-    (javaOptions in Test).value exists (s => s.contains("-javaagent:") && s.contains("maxwell")),
-    "javaOptions in Test do not contain 'maxwell' agent"
+    (Test / javaOptions).value exists (s =>
+      s.contains("-javaagent:") && s.contains("maxwell")
+    ),
+    "Test / javaOptions do not contain 'maxwell' agent"
   )
 
   assert(
-    !((fullClasspath in Test).value exists (f => f.data.name.contains("maxwell"))),
+    !((Test / fullClasspath).value exists (f =>
+      f.data.name.contains("maxwell")
+    )),
     "maxwell test agent is available on the test run class path"
   )
 
