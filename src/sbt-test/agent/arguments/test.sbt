@@ -1,26 +1,35 @@
 TaskKey[Unit]("check") := {
   assert(
-    (fork in Test).value,
-    "fork in Test is not enabled"
+    (Test / fork).value,
+    "Test / fork is not enabled"
   )
 
   assert(
-    (javaOptions in Test).value exists (s => s.contains("-javaagent:") && s.contains("maxwell")),
-    "javaOptions in Test do not contain 'maxwell' agent"
+    (Test / javaOptions).value exists (s =>
+      s.contains("-javaagent:") && s.contains("maxwell")
+    ),
+    "Test / javaOptions do not contain 'maxwell' agent"
   )
 
   assert(
-    (javaOptions in Test).value exists (s => s.contains("-javaagent:") && s.contains("maxwell") && s.contains("=Get_Smart;Agent_99")),
-    "javaOptions in Test do not contain 'Get_Smart;Agent_99' agent arguments"
+    (Test / javaOptions).value exists (s =>
+      s.contains("-javaagent:") && s.contains("maxwell") && s.contains(
+        "=Get_Smart;Agent_99"
+      )
+    ),
+    "Test / javaOptions do not contain 'Get_Smart;Agent_99' agent arguments"
   )
 
   assert(
-    (mappings in Universal).value exists { case (file, path) => path == "maxwell/maxwell.jar" },
+    (Universal / mappings).value exists { case (file, path) =>
+      path == "maxwell/maxwell.jar"
+    },
     "dist mappings do not include 'maxwell/maxwell.jar'"
   )
 
   import scala.sys.process._
-  val output = ((stagingDirectory in Universal).value / "bin" / packageName.value).absolutePath.!!
+  val output =
+    ((Universal / stagingDirectory).value / "bin" / packageName.value).absolutePath.!!
 
   assert(
     !(output contains "Agent 86"),

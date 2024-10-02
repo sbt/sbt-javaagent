@@ -1,17 +1,20 @@
 TaskKey[Unit]("check") := {
   assert(
-    libraryDependencies.value contains ("sbt.javaagent.test" % "maxwell" % sys.props("project.version") % "javaagent"),
+    libraryDependencies.value contains ("sbt.javaagent.test" % "maxwell" % sys
+      .props("project.version") % "javaagent"),
     "maxwell test agent is not in libraryDependencies under 'javaagent'"
   )
 
   assert(
-    (fork in run).value,
-    "fork in run is not enabled"
+    (run / fork).value,
+    "run / fork is not enabled"
   )
 
   assert(
-    (javaOptions in run).value exists (s => s.contains("-javaagent:") && s.contains("maxwell")),
-    "javaOptions in run do not contain 'maxwell' agent"
+    (run / javaOptions).value exists (s =>
+      s.contains("-javaagent:") && s.contains("maxwell")
+    ),
+    "run / javaOptions do not contain 'maxwell' agent"
   )
 
   val runLog = IO.read(file("run.log"))

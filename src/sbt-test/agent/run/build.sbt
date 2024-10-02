@@ -1,3 +1,5 @@
-lazy val agentRun = project in file(".") enablePlugins JavaAgent
+lazy val agentRun = project.in(file(".")).enablePlugins(JavaAgent)
 
-javaAgents += "sbt.javaagent.test" % "maxwell" % sys.props("project.version") % "runtime"
+javaAgents += "sbt.javaagent.test" % "maxwell" % sys.props(
+  "project.version"
+) % "runtime"
