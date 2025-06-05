@@ -3,7 +3,7 @@
  */
 
 // sbt cross build
-crossSbtVersions := Seq("1.10.2")
+crossSbtVersions := Seq("1.11.1")
 
 // dependencies
 val packagerVersion = "1.10.4"
@@ -55,7 +55,6 @@ lazy val `sbt-javaagent` = (project.in(file(".")))
   )
 
 // publish settings
-publishMavenStyle := true
 licenses += "Apache-2.0" -> url(
   "http://www.apache.org/licenses/LICENSE-2.0.html"
 )
@@ -73,22 +72,4 @@ developers := List(
     "https://github.com/sbt/sbt-javaagent/discussions",
     url("https://github.com/sbt/sbt-javaagent/graphs/contributors")
   )
-)
-publishTo := sonatypePublishTo.value
-
-// release settings
-import ReleaseTransformations._
-releaseProcess := Seq[ReleaseStep](
-  checkSnapshotDependencies,
-  inquireVersions,
-  runClean,
-  releaseStepCommandAndRemaining("^ scripted"),
-  setReleaseVersion,
-  commitReleaseVersion,
-  tagRelease,
-  releaseStepCommandAndRemaining("^ publishSigned"),
-  releaseStepCommand("sonatypeReleaseAll"),
-  setNextVersion,
-  commitNextVersion,
-  pushChanges
 )
