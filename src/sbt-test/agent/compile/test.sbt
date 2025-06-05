@@ -18,7 +18,7 @@ TaskKey[Unit]("checkLog") := {
 TaskKey[Unit]("checkDist") := {
   import scala.sys.process._
   val output =
-    ((Universal / stagingDirectory).value / "bin" / packageName.value).absolutePath.!!
+    ((Universal / com.typesafe.sbt.packager.universal.UniversalPlugin.autoImport.stagingDirectory).value / "bin" / packageName.value).absolutePath.!!
   expect("dist run", output, "Agent 86")
   expect("dist run", output, "class maxwell.Maxwell")
 }
