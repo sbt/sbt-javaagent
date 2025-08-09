@@ -37,6 +37,8 @@ This will automatically resolve the agent module, bundle the agent artifact in t
 
 By default, sbt-javaagent will only add an agent to distributions. Agents can be optionally enabled for compile, run, or test.
 
+> **Note**: starting from v0.2.0, if the agent is only in `test` scope, it won't be added do distributions. You can set the scope to `dist;test` to retain the previous behaviour.
+
 The following scopes are supported:
 
    * **dist** — bundle the agent in production distributions and add a `-javaagent` option to start scripts
