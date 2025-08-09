@@ -3,7 +3,7 @@
  */
 
 // sbt cross build
-crossSbtVersions := Seq("1.11.1")
+crossSbtVersions := Seq("1.11.4")
 
 // dependencies
 val packagerVersion = "1.11.1"
