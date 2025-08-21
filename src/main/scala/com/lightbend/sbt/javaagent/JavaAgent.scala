@@ -44,7 +44,8 @@ object JavaAgent extends JavaAgent {
     val inCompile = scope.compile || confs.contains(Compile.name) || confs.contains(Provided.name)
     val inRun = scope.run || inCompile || confs.contains(Runtime.name)
     val inTest = scope.test || confs.contains(Test.name)
-    val inDist = scope.dist
+    // Note: in order to not be a breaking change, dist scope defaults to true unless scope is test only
+    val inDist = scope.dist && !(confs.contains(Test.name) && confs.size == 1)
     val configuration = if (inCompile) Provided else AgentConfig
     val reconfiguredModule = Modules.withConfigurations(module, Some(configuration.name))
     val configuredScope = AgentScope(compile = inCompile, test = inTest, run = inRun, dist = inDist)
