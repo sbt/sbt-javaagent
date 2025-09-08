@@ -4,8 +4,10 @@
 
 package com.lightbend.sbt.javaagent
 
-import sbt._
-import sbt.Keys._
+import sbt.*
+import sbt.Keys.*
+import xsbti.FileConverter
+import PluginCompat.{ *, given }
 
 /**
  * Plugin for adding Java agents to projects in a general way.
@@ -17,21 +19,12 @@ object JavaAgent extends JavaAgent {
 
   object JavaAgentKeys {
     val javaAgents = settingKey[Seq[AgentModule]]("Java agent modules enabled for this project.")
+
+    @transient
     val resolvedJavaAgents = taskKey[Seq[ResolvedAgent]]("Java agent modules with resolved artifacts.")
   }
 
   val AgentConfig = config("javaagent").hide
-
-  case class AgentScope(compile: Boolean = false, test: Boolean = false, run: Boolean = false, dist: Boolean = true)
-
-  case class AgentModule(name: String, module: ModuleID, scope: AgentScope, arguments: String)
-
-  case class ResolvedAgent(agent: AgentModule, artifact: File)
-
-  object AgentModule {
-    import scala.language.implicitConversions
-    implicit def moduleToAgentModule(module: ModuleID): AgentModule = JavaAgent(module)
-  }
 
   /**
    * Create an agent module from a module dependency.
@@ -69,7 +62,11 @@ class JavaAgent extends AutoPlugin {
     Test/fork := enableFork(Test/fork, _.scope.test).value,
     run/javaOptions ++= agentOptions(_.agent.scope.run).value,
     Test/javaOptions ++= agentOptions(_.agent.scope.test).value,
-    Test/fullClasspath := filterAgents((Test/fullClasspath).value, resolvedJavaAgents.value)
+    Test/fullClasspath := Def.uncached {
+      val conv = fileConverter.value
+      implicit val conv0: xsbti.FileConverter = conv
+      filterAgents((Test/fullClasspath).value, resolvedJavaAgents.value)
+    }
   )
 
   private def resolveAgents = Def.task[Seq[ResolvedAgent]] {
@@ -102,8 +99,9 @@ class JavaAgent extends AutoPlugin {
     }
   }
 
-  def filterAgents(classpath: Classpath, resolvedAgents: Seq[ResolvedAgent]): Classpath = {
+  def filterAgents(classpath: Classpath, resolvedAgents: Seq[ResolvedAgent])(implicit conv: FileConverter): Classpath = {
     val agents = resolvedAgents.map(resolved => resolved.artifact.absolutePath)
-    classpath.filter(aFile => !agents.contains(aFile.data.getAbsolutePath))
+    classpath
+      .filter(entry => !agents.contains(PluginCompat.toFile(entry).getAbsolutePath))
   }
 }

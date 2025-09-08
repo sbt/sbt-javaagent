@@ -2,12 +2,12 @@
  * Copyright © 2016-2017 Lightbend, Inc. <http://www.lightbend.com>
  */
 
-// sbt cross build
-crossSbtVersions := Seq("1.11.4")
-
 // dependencies
 val packagerVersion = "1.11.4"
 val packager19xVersion = "1.9.16"
+
+val scala212 = "2.12.20"
+val scala3 = "3.7.2"
 
 addSbtPlugin(
   "com.github.sbt" % "sbt-native-packager" % packagerVersion % "provided"
@@ -42,6 +42,13 @@ lazy val `sbt-javaagent` = (project.in(file(".")))
   .settings(
     name := "sbt-javaagent",
     organization := "com.github.sbt",
+    crossScalaVersions := Seq(scala212, scala3),
+    scalacOptions ++= {
+      scalaBinaryVersion.value match {
+        case "2.12" => Seq("-Xsource:3")
+        case _      => Nil
+      }
+    },
     scriptedBufferLog := false,
     scriptedLaunchOpts ++= Seq(
       "-Dproject.version=" + version.value,
@@ -51,6 +58,18 @@ lazy val `sbt-javaagent` = (project.in(file(".")))
     scriptedDependencies := {
       (maxwell / publishLocal).value
       publishLocal.value
+    },
+    (pluginCrossBuild / sbtVersion) := {
+      scalaBinaryVersion.value match {
+        case "2.12" => "1.11.6"
+        case _      => "2.0.0-RC4"
+      }
+    },
+    scriptedSbt := {
+      scalaBinaryVersion.value match {
+        case "2.12" => "1.11.6"
+        case _      => (pluginCrossBuild / sbtVersion).value
+      }
     }
   )
 
