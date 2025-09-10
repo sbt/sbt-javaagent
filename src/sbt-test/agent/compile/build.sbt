@@ -3,4 +3,4 @@ lazy val agentCompile =
 
 javaAgents += "sbt.javaagent.test" % "maxwell" % sys.props(
   "project.version"
-) % "compile"
+) % Compile
