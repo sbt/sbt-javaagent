@@ -36,4 +36,4 @@ jobs:
     - name: Scala 3
       if: ${{ matrix.jobtype == 2 }}
       shell: bash
-      run: sbt -v '++ 3.x' scripted
+      run: sbt -v '++ 3.x' 'scripted agent/*'
