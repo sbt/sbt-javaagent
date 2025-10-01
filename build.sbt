@@ -6,7 +6,7 @@
 crossSbtVersions := Seq("1.11.4")
 
 // dependencies
-val packagerVersion = "1.11.3"
+val packagerVersion = "1.11.4"
 val packager19xVersion = "1.9.16"
 
 addSbtPlugin(
