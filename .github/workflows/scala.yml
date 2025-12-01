@@ -9,7 +9,15 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            jobtype: 1
+          - os: ubuntu-latest
+            jobtype: 2
+    runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v6
@@ -21,5 +29,11 @@ jobs:
         cache: sbt
     - name: Install sbt
       uses: sbt/setup-sbt@v1
-    - name: Run tests
-      run: sbt "^ scripted"
+    - name: Build and test
+      if: ${{ matrix.jobtype == 1 }}
+      shell: bash
+      run: sbt -v '++ 2.12.x' scripted
+    - name: Scala 3
+      if: ${{ matrix.jobtype == 2 }}
+      shell: bash
+      run: sbt -v '++ 3.x' 'scripted agent/*'
