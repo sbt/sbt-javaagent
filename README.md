@@ -48,15 +48,15 @@ The following scopes are supported:
 
 The plugin can derive these scopes from module configurations.
 
-For example, to add an agent to *compile*, to build against an API provided by an agent, use the `compile` or `provided` configuration:
+For example, to add an agent to *Compile*, to build against an API provided by an agent, use the `Compile` or `Provided` configuration:
 
 ```scala
-javaAgents += "com.example" % "agent" % "1.2.3" % "compile"
+javaAgents += "com.example" % "agent" % "1.2.3" % Compile
 ```
 
 Marking a dependency for *compile* will also automatically enable the agent for *run* as well.
 
-To enable for run or tests, use the `runtime` or `test` configurations.
+To enable for run or tests, use the `Runtime` or `Test` configurations.
 
 Multiple configurations can be specified. For example, the following will enable both *compile* and *test* (and implicitly *run*):
 
@@ -64,9 +64,9 @@ Multiple configurations can be specified. For example, the following will enable
 javaAgents += "com.example" % "agent" % "1.2.3" % "compile;test"
 ```
 
-Note that in this case, the agent dependency is actually added under the `provided` configuration, so that a project can compile against the agent and then have the agent provided at runtime using a `-javaagent` option.
+Note that in this case, the agent dependency is actually added under the `Provided` configuration, so that a project can compile against the agent and then have the agent provided at runtime using a `-javaagent` option.
 
-If the *compile* scope is not enabled, then the agent dependency is put under a special `javaagent` configuration so that it doesn't appear as a regular library dependency or on build classpaths.
+If the *Compile* scope is not enabled, then the agent dependency is put under a special `Javaagent` configuration so that it doesn't appear as a regular library dependency or on build classpaths.
 
 ## Agent arguments
 
