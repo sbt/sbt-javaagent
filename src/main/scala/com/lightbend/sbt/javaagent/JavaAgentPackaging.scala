@@ -4,8 +4,8 @@
 
 package com.lightbend.sbt.javaagent
 
-import sbt._
-import sbt.Keys._
+import sbt.*
+import sbt.Keys.*
 import com.typesafe.sbt.packager.universal.UniversalPlugin.autoImport.Universal
 import java.io.File
 
@@ -24,7 +24,11 @@ object JavaAgentPackaging extends AutoPlugin {
   override def projectSettings = {
     import com.typesafe.sbt.packager.{ Keys => PackagerKeys }
     Seq(
-      Universal / mappings ++= agentMappings.value.map(m => m._1 -> m._2),
+      Universal / mappings ++= {
+        val conv = fileConverter.value
+        implicit val conv0: xsbti.FileConverter = conv
+        agentMappings.value.map(m => PluginCompat.toFileRef(m._1) -> m._2)
+      },
       PackagerKeys.bashScriptExtraDefines ++= agentBashScriptOptions.value,
       PackagerKeys.batScriptExtraDefines ++= agentBatScriptOptions.value
     )
