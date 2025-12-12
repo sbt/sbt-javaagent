@@ -6,7 +6,7 @@
 val packagerVersion = "1.11.4"
 val packager19xVersion = "1.9.16"
 
-val scala212 = "2.12.20"
+val scala212 = "2.12.21"
 val scala3 = "3.7.4"
 
 addSbtPlugin(
