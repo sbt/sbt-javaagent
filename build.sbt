@@ -7,7 +7,7 @@ val packagerVersion = "1.11.7"
 val packager19xVersion = "1.9.16"
 
 val scala212 = "2.12.21"
-val scala3 = "3.7.4"
+val scala3 = "3.8.1"
 
 addSbtPlugin(
   "com.github.sbt" % "sbt-native-packager" % packagerVersion % "provided"
