@@ -23,6 +23,16 @@ scalacOptions ++= Seq(
 )
 javacOptions ++= Seq("-encoding", "UTF-8")
 
+lazy val maxwellLib = project
+  .in(file("maxwell-lib"))
+  .settings(
+    name := "maxwell-lib",
+    organization := "sbt.javaagent.test",
+    autoScalaLibrary := false,
+    crossPaths := false,
+    publish := {}
+  )
+
 // test agent
 lazy val maxwell = project
   .in(file("maxwell"))
@@ -35,6 +45,7 @@ lazy val maxwell = project
       .ManifestAttributes("Premain-Class" -> "maxwell.Maxwell"),
     publish := {}
   )
+  .dependsOn(maxwellLib)
 
 // plugin module
 lazy val `sbt-javaagent` = (project.in(file(".")))
@@ -57,6 +68,7 @@ lazy val `sbt-javaagent` = (project.in(file(".")))
     ),
     scriptedDependencies := {
       (maxwell / publishLocal).value
+      (maxwellLib / publishLocal).value
       publishLocal.value
     },
     (pluginCrossBuild / sbtVersion) := {
