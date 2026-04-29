@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 public class Maxwell {
     public static void premain(String agentArgs, Instrumentation instrumentation) {
+        System.out.println(MaxwellLib.value());
         String[] output = new String[] { "Agent 86" };
         if (agentArgs != null) {
             output = agentArgs.split(Pattern.quote(";"));
