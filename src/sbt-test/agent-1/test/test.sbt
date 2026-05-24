@@ -21,7 +21,7 @@ TaskKey[Unit]("check") := {
   val testLog = IO.read(BuiltinCommands.lastLogFile(state.value).get)
 
   assert(
-    testLog contains "Agent 86",
+    testLog.contains("Agent 86"),
     "test log does not include 'Agent 86'"
   )
 }

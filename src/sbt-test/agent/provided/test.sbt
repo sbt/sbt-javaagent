@@ -1,6 +1,6 @@
 TaskKey[Unit]("check") := {
   def expect(name: String, contents: String, expected: String): Unit =
-    assert(contents contains expected, s"$name should contain '$expected'")
+    assert(contents.contains(expected), s"$name should contain '$expected'")
 
   val log = IO.read(file("run.log"))
 
