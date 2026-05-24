@@ -28,7 +28,7 @@ TaskKey[Unit]("check") := {
     ((Universal / com.typesafe.sbt.packager.universal.UniversalPlugin.autoImport.stagingDirectory).value / "bin" / packageName.value).absolutePath.!!
 
   assert(
-    !(output contains "Agent 86"),
+    !output.contains("Agent 86"),
     "output include 'Agent 86'"
   )
 

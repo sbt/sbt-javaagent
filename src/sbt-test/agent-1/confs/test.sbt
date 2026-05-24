@@ -5,7 +5,7 @@ def checkLog(logFile: String): Unit = {
   val log = IO.read(file(logFile))
 
   def expect(expected: String): Unit = {
-    assert(log contains expected, s"log should contain '$expected'")
+    assert(log.contains(expected), s"log should contain '$expected'")
   }
 
   expect("Agent 86")

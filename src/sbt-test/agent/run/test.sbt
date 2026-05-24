@@ -20,7 +20,7 @@ TaskKey[Unit]("check") := {
   val runLog = IO.read(file("run.log"))
 
   assert(
-    runLog contains "Agent 86",
+    runLog.contains("Agent 86"),
     "run log does not include 'Agent 86'"
   )
 }
