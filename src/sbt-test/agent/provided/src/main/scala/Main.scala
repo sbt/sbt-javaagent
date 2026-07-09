@@ -1,3 +1,5 @@
-object Main extends App {
-  println(classOf[maxwell.Maxwell])
+object Main {
+  def main(args: Array[String]): Unit = {
+    println(classOf[maxwell.Maxwell])
+  }
 }
