@@ -36,6 +36,46 @@ lazy val maxwell = project
     publish := {}
   )
 
+// pom-only BOM pinning the maxwell agent version, used to test wildcard resolution
+lazy val maxwellBom = project
+  .in(file("maxwell-bom"))
+  .settings(
+    name := "maxwell-bom",
+    organization := "sbt.javaagent.test",
+    autoScalaLibrary := false,
+    crossPaths := false,
+    Compile / packageBin / publishArtifact := false,
+    Compile / packageSrc / publishArtifact := false,
+    Compile / packageDoc / publishArtifact := false,
+    makePom / publishArtifact := true,
+    makePom := {
+      val pomFile = target.value / s"${name.value}-${version.value}.pom"
+      IO.write(
+        pomFile,
+        s"""<?xml version="1.0" encoding="UTF-8"?>
+           |<project xmlns="http://maven.apache.org/POM/4.0.0">
+           |  <modelVersion>4.0.0</modelVersion>
+           |  <groupId>${organization.value}</groupId>
+           |  <artifactId>${name.value}</artifactId>
+           |  <version>${version.value}</version>
+           |  <packaging>pom</packaging>
+           |  <dependencyManagement>
+           |    <dependencies>
+           |      <dependency>
+           |        <groupId>${(maxwell / organization).value}</groupId>
+           |        <artifactId>${(maxwell / name).value}</artifactId>
+           |        <version>${(maxwell / version).value}</version>
+           |      </dependency>
+           |    </dependencies>
+           |  </dependencyManagement>
+           |</project>
+           |""".stripMargin
+      )
+      pomFile
+    },
+    publish := {}
+  )
+
 // plugin module
 lazy val `sbt-javaagent` = (project.in(file(".")))
   .enablePlugins(SbtPlugin)
@@ -57,6 +97,12 @@ lazy val `sbt-javaagent` = (project.in(file(".")))
     ),
     scriptedDependencies := {
       (maxwell / publishLocal).value
+      // published to the local Maven repository (~/.m2) too: the BOM/wildcard scripted
+      // test resolves through it since coursier only reads dependencyManagement/BOM
+      // constraints off of poms it fetches from a genuine Maven repository, not off of
+      // ivy2-local's ivy.xml descriptor.
+      (maxwell / publishM2).value
+      (maxwellBom / publishM2).value
       publishLocal.value
     },
     (pluginCrossBuild / sbtVersion) := {
