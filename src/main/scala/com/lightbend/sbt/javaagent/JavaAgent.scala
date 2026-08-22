@@ -78,12 +78,26 @@ class JavaAgent extends AutoPlugin {
           s"Missing agents: $missingAgentDependencies"
       )
     }
-    val resolvedAgents = javaAgents.value flatMap { agent =>
-      update.value.matching(Modules.exactFilter(agent.module)).headOption map {
-        jar => ResolvedAgent(agent, jar)
+
+    val resolvedModules = update.value.allModules
+    val resolvedAgents: Seq[ResolvedAgent] = javaAgents.value.flatMap { agent =>
+      val maybeResolved =
+        if (agent.module.revision == "*") {
+          resolvedModules.find(m => m.organization == agent.module.organization && m.name == agent.module.name)
+        } else {
+          resolvedModules.find(m =>
+            m.organization == agent.module.organization &&
+              m.name == agent.module.name &&
+              m.revision == agent.module.revision
+          )
+        }
+
+      maybeResolved.flatMap { module =>
+        update.value.matching(Modules.exactFilter(module)).headOption.map(jar => ResolvedAgent(agent, jar))
       }
     }
-    val unresolvedAgents = javaAgents.value.filterNot(agent => resolvedAgents.map(_.agent.module).contains(agent.module))
+
+    val unresolvedAgents = javaAgents.value.filterNot(agent => resolvedAgents.exists(_.agent.module == agent.module))
     if (unresolvedAgents.nonEmpty)
       sys.error(s"Unable to resolve agents, missing agents: $unresolvedAgents")
     else resolvedAgents

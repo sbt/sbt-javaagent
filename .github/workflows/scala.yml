@@ -40,8 +40,9 @@ jobs:
     - name: Build and test
       if: ${{ matrix.jobtype == 1 }}
       shell: bash
-      run: sbt -v '++ 2.12.x' scripted
+      # agent-2/* relies on sbt 2.x-only BOM/wildcard support (ModuleID#pomOnly), skip it here
+      run: sbt -v '++ 2.12.x' 'scripted agent/* agent-1/*'
     - name: Scala 3
       if: ${{ matrix.jobtype == 2 }}
       shell: bash
-      run: sbt -v '++ 3.x' 'scripted agent/*'
+      run: sbt -v '++ 3.x' 'scripted agent/* agent-2/*'
