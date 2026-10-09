@@ -3,7 +3,7 @@
  */
 
 // dependencies
-val packagerVersion = "1.12.0"
+val packagerVersion = "1.13.0"
 val packager19xVersion = "1.9.16"
 
 val scala212 = "2.12.21"
