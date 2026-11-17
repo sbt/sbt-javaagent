@@ -15,8 +15,16 @@ jobs:
         include:
           - os: ubuntu-latest
             jobtype: 1
+            java: 8
           - os: ubuntu-latest
             jobtype: 2
+            java: 17
+          - os: ubuntu-latest
+            jobtype: 2
+            java: 21
+          - os: ubuntu-latest
+            jobtype: 2
+            java: 25
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -26,14 +34,14 @@ jobs:
       if: ${{ matrix.jobtype == 1 }}
       with:
         distribution: temurin
-        java-version: 8.0.372+7
+        java-version: 8
         cache: sbt
-    - name: Set up JDK 17
+    - name: Setup modern JDK
       uses: actions/setup-java@v6
-      if: ${{ matrix.jobtype == 2 }}
+      if: ${{ matrix.jobtype != 1 }}
       with:
         distribution: temurin
-        java-version: 17
+        java-version: ${{ matrix.java }}
         cache: sbt
     - name: Install sbt
       uses: sbt/setup-sbt@v1

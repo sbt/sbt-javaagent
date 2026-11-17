@@ -7,7 +7,8 @@ val packagerVersion = "1.13.0"
 val packager19xVersion = "1.9.16"
 
 val scala212 = "2.12.21"
-val scala3 = "3.8.4"
+val scala3 = "3.9.0"
+ThisBuild / scalaVersion := scala212
 
 addSbtPlugin(
   "com.github.sbt" % "sbt-native-packager" % packagerVersion % "provided"
@@ -108,7 +109,7 @@ lazy val `sbt-javaagent` = (project.in(file(".")))
     (pluginCrossBuild / sbtVersion) := {
       scalaBinaryVersion.value match {
         case "2.12" => "1.11.6"
-        case _      => "2.0.0"
+        case _      => "2.1.0"
       }
     },
     scriptedSbt := {
